@@ -106,3 +106,35 @@ def reachable(program_key: str) -> list[str]:
 def mine(program_key: str) -> list[str]:
     """Currencies he can actually move points from today (not 'could, if he opened an account')."""
     return [k for k in MY_CURRENCIES if program_key in TRANSFERS[k]["reaches"]]
+
+
+# ---------------------------------------------------------------------------
+# Hard rules that no amount of clever routing gets around.
+# ---------------------------------------------------------------------------
+HARD_RULES = [
+    ("Miles never move between airline programs",
+     "KrisFlyer T&C clause 9: \"Transfer of KrisFlyer miles from a member's account to another "
+     "account in a different frequent flyer programme, and vice versa, is not allowed.\" The same "
+     "is true of ANA, JAL, Avios, Asia Miles — none of them accept another airline's miles. "
+     "Star Alliance is an earn-and-burn alliance, not a transfer network.",
+     "https://www.singaporeair.com/en_UK/us/ppsclub-krisflyer/termsconditions-kf/"),
+    ("Alliance membership buys you ACCESS, not a cheaper price",
+     "KrisFlyer miles can book ANA/Thai/EVA seats, but they price off the KRISFLYER Star chart "
+     "(Japan-Indonesia J = 52,500 one-way). ANA's own 30,000 partner-chart price only exists for "
+     "an ANA Mileage Club balance. Same seat, different wallet behind it.",
+     "https://www.singaporeair.com/.../StarAllianceRound-TripAwardChartupdated1Nov25.pdf"),
+    ("So the only ways to hold ANA miles",
+     "(1) open a free ANA Mileage Club account and credit Star flights to it instead of KrisFlyer; "
+     "(2) transfer from a card currency ANA accepts (Amex MR etc. — Indonesian cards do not); "
+     "(3) ANA Family Club pooling from a relative's ANA balance. Buying KrisFlyer miles does not help.",
+     "https://www.ana.co.jp/en/jp/amc/"),
+    ("Points parked in KrisFlyer rot",
+     "KrisFlyer miles expire 3 years after accrual (1 year for contest miles) and cannot be "
+     "extended, and card conversions are irreversible. Convert when a seat is held, not before.",
+     "https://www.singaporeair.com/en_UK/sg/ppsclub-krisflyer/termsconditions-kf"),
+    ("ANA does fly Japan-Indonesia nonstop",
+     "NH855 HND→CGK daily. That makes an ANA balance more useful than it looks — but the 30,000 "
+     "figure in this tool is ANA's PARTNER chart; an all-ANA-metal itinerary prices on ANA's own "
+     "seasonal chart, so confirm on ANA's calculator before transferring anything.",
+     "https://www.ana.co.jp/en/mm/plan-book/routes/international-route-information/"),
+]

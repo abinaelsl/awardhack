@@ -34,6 +34,11 @@ def verdict(yen_per_mile: float) -> str:
     return "?"
 
 
+def _wrap(text: str, width: int) -> list[str]:
+    import textwrap
+    return textwrap.wrap(text, width=width) or [""]
+
+
 def _cab(s: str) -> str:
     c = CABIN_ALIASES.get(s.lower())
     if not c:
@@ -174,6 +179,12 @@ def cmd_sweet(args) -> int:
         print(f"  program: {PROGRAM_TAG.get(s['program'], s['program'])}")
         print(f"  why:     {s['why']}")
         print(f"  catch:   {s['catch']}")
+    print("\nHARD RULES (no routing trick beats these)")
+    for title, body, src in transfers.HARD_RULES:
+        print(f"\n  {title}")
+        for line in _wrap(body, 92):
+            print(f"    {line}")
+        print(f"    src: {src}")
     print("\nData version", data.DATA_VERSION,
           "· full charts: awardhack/data.py · verify every number at booking")
     return 0
