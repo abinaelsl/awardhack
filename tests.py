@@ -81,6 +81,29 @@ for route in [("FUK", "CGK"), ("BKK", "CGK"), ("SIN", "CGK"), ("HND", "LHR"), ("
 print(f"PASS  engine returns sorted, confidence-tagged options for 5 sample routes "
       f"({len(data.PROGRAMS)} programs, {len(ap.AIRPORTS)} airports)")
 
+# ---- CLI: sale discounts apply to one program only, and re-rank
+import contextlib, io, json
+from awardhack import cli
+
+
+def run_json(*argv):
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = cli.main(list(argv))
+    return rc, json.loads(buf.getvalue())
+
+
+rc, out = run_json("route", "FUK", "CGK", "--funded", "--no-live", "--json",
+                   "--discount", "30", "--cash", "95000")
+by = {c["program"]: c["miles"] for c in out["charts"]}
+check("Escapes -30% hits SQ metal (57,000 → 39,900)", by["krisflyer_sq"], 39900)
+check("Escapes leaves Star partners alone", by["krisflyer_star"], 52500)
+check("discounted SQ now ranks first", out["charts"][0]["program"], "krisflyer_sq")
+check("best_funded is the discounted SQ award", out["best_funded"]["miles"], 39900)
+check("--json --no-live emits live: null", out["live"], None)
+rc, out = run_json("route", "HND", "LHR", "--funded", "--no-live", "--json")
+check("--funded --json still returns JSON", rc, 0)
+
 print()
 if FAILED:
     raise SystemExit(f"{len(FAILED)} FAILED: {FAILED}")

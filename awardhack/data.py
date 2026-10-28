@@ -491,13 +491,16 @@ SWEET_SPOTS = [
         "route": "SIN ⇄ CGK/SUB 24,000 · SIN ⇄ DPS 21,000 · CGK ⇄ DPS 21,000",
         "cabin": "J",
         "miles": "21,000–24,000 J one-way (economy 13,500)",
-        "program": "garudamiles_ga",
+        "program": "krisflyer_ga",
         "why": "GA joined KrisFlyer for redemptions in Aug 2025, so SQ miles now book Garuda's "
                "nonstops — including CGK↔DPS, where 21,000 undercuts SQ's own 23,000 "
                "within-zone price.",
         "catch": "Only the listed city pairs are on the chart (Singapore/Denpasar/Jakarta/"
                  "Surabaya/Lombok/Labuan Bajo/Sam Ratulangi). Garuda's Japan flights are NOT "
-                 "bookable with KrisFlyer miles — for those you would need GarudaMiles.",
+                 "bookable with KrisFlyer miles — for those you would need GarudaMiles. "
+                 "UNVERIFIED: not transcribed from SQ's partner chart, and third-party reports "
+                 "conflict (one gives a flat 13,500 Y / 24,000 J on every SIN pair). Check "
+                 "singaporeair.com before relying on the 21,000 prices.",
     },
 ]
 

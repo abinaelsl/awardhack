@@ -53,7 +53,7 @@ No dependencies (Python 3.10+, stdlib only).
 ```bash
 cd ~/award-hack
 python3 -m awardhack route FUK CGK -c J --cash 95000
-python3 tests.py            # 29 chart assertions
+python3 tests.py            # chart + CLI assertions
 ```
 
 Optional entry point:
@@ -66,6 +66,7 @@ pip install --user .        # then just: awardhack route FUK CGK
 
 ```
 awardhack route ORIGIN DEST [-c Y|W|J|F] [--via HKG ...] [--cash N --cash-currency JPY]
+                            [--funded] [--discount 30 [--discount-program krisflyer_sq]]
                             [--no-live] [--refresh] [--json] [-v]
 awardhack sweet             # curated sweet-spot library with the catch for each
 awardhack transfers         # which card currency reaches which program
@@ -80,7 +81,14 @@ Useful flags:
 - `--via HKG` — prices the itinerary you'd actually fly, which matters for the distance-based
   charts (JAL oneworld, Avios, Asia Miles).
 - `--no-live` — pure chart mode, no network.
-- `--json` — machine-readable, for piping into a cron job or another agent.
+- `--funded` — hide programs your current cards can't reach (`transfers.MY_CURRENCIES`).
+- `--discount 30` — price an award sale such as KrisFlyer Spontaneous Escapes. It applies only to
+  `--discount-program` (default `krisflyer_sq`, SQ metal) and re-ranks the list, because a sale
+  on one program says nothing about the others.
+- `--json` — machine-readable, for piping into a cron job or another agent. Each chart row
+  carries `miles` (after any sale), `chart_miles`, `funded_from`, `yen_per_mile_gross` and
+  `verdict`; `best_funded` is the cheapest row you can book today; `live` is `null` with
+  `--no-live`.
 
 Rule of thumb thresholds are stored in `awardhack/cli.py::VERDICTS`; change them if your
 cash-fare baseline changes.
@@ -128,13 +136,16 @@ It is a cross-check, not the source of truth: it can only report programs with s
 
 ## Cron
 
-`awardhack watch` prints a JSON digest of `watchlist.json` (cheapest chart price per route plus
-the best awards actually observed in the last 30 days). Hermes runs it weekly as job
+`awardhack watch` prints a JSON digest of `watchlist.json`. Per route: `cheapest_chart`,
+`cheapest_funded_chart` (what you can book with your own cards), `live` (best observed awards,
+watched cabin first), `bookable_now` (live space seen in a program you can fund — the
+actionable signal), and `cheaper_elsewhere` (a program you can't fund beat you — informational). Hermes runs it weekly as job
 `awardhack-watch`, Mon 09:00 JST, delivering to DM.
 
 The scheduler's script hook takes a **file path**, not a shell command, so the job points at
-`~/AppData/Local/hermes/scripts/awardhack_watch.py`, which shells out to
-`python3 -m awardhack watch` in the repo and prints its JSON.
+`~/AppData/Local/hermes/scripts/awardhack_watch.py` (a copy of `scripts_cron.py`), which shells
+out to `python3 -m awardhack watch` in the repo and prints its JSON. The repo is found via
+`$AWARDHACK_REPO`, then `~/award-hack`, then the script's own folder.
 
 ## Layout
 
@@ -145,7 +156,7 @@ awardhack/engine.py      chart → miles, per program, with the derivation strin
 awardhack/live.py        AwardTool live cross-check + FX
 awardhack/transfers.py   card currency → program map
 awardhack/cli.py         the CLI
-tests.py                 29 assertions, each traceable to a chart line
+tests.py                 chart assertions (each traceable to a chart line) + CLI checks
 watchlist.json           routes worth re-checking on a schedule
 docs/research-notes.md   the underlying research, with citations
 ```

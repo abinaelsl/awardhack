@@ -147,22 +147,4 @@ def fx_rate(base: str, quote: str = "JPY", default: float = 150.0) -> float:
 
 
 def fx_usdjpy(default: float = 150.0) -> float:
-    cp = os.path.join(CACHE, "usdjpy.json")
-    if os.path.exists(cp):
-        try:
-            blob = json.load(open(cp, encoding="utf-8"))
-            if (datetime.now(timezone.utc).timestamp() - blob["ts"]) < 86400:
-                return blob["rate"]
-        except Exception:
-            pass
-    payload = _fetch("https://api.frankfurter.app/latest?from=USD&to=JPY", timeout=15)
-    if payload:
-        try:
-            rate = float(json.loads(payload)["rates"]["JPY"])
-            os.makedirs(CACHE, exist_ok=True)
-            json.dump({"rate": rate, "ts": datetime.now(timezone.utc).timestamp()},
-                      open(cp, "w", encoding="utf-8"))
-            return rate
-        except Exception:
-            pass
-    return default
+    return fx_rate("USD", "JPY", default)

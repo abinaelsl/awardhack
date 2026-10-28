@@ -10,7 +10,18 @@ import os
 import subprocess
 import sys
 
-REPO = os.path.expanduser("~/award-hack")
+
+
+def _find_repo() -> str:
+    """$AWARDHACK_REPO, else ~/award-hack (Hermes box), else wherever this file lives."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for cand in (os.environ.get("AWARDHACK_REPO"), os.path.expanduser("~/award-hack"), here):
+        if cand and os.path.isdir(os.path.join(cand, "awardhack")):
+            return cand
+    return os.environ.get("AWARDHACK_REPO") or os.path.expanduser("~/award-hack")
+
+
+REPO = _find_repo()
 
 
 def main() -> int:
