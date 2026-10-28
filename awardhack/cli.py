@@ -90,6 +90,14 @@ def cmd_route(args) -> int:
         cash_jpy = args.cash * live.fx_rate((args.cash_currency or "JPY").upper(), "JPY")
 
     opts = engine.price_all(o, d, cabin, via)
+    dropped = []
+    if args.funded:
+        dropped = [x for x in opts if not transfers.mine(x.program)]
+        opts = [x for x in opts if transfers.mine(x.program)]
+        if not opts:
+            print("\nNo chart option is reachable from your current cards on this route.")
+            print("Run without --funded to see what you would need to open/fund.")
+            return 1
     print("CHARTS (what the program's published chart says you'd pay one-way)")
     print(f"  {'miles':>7}  {'program':<17}     {'basis':<44} value")
     print("  " + "-" * 88)
@@ -105,8 +113,13 @@ def cmd_route(args) -> int:
     print("\nCAN YOU ACTUALLY FUND IT")
     for opt in opts[:6]:
         keys = transfers.reachable(opt.program)
-        print(f"  {PROGRAM_TAG.get(opt.program, opt.program):<17} ← "
+        _mine = transfers.mine(opt.program)
+        mark = "✅ TODAY" if _mine else "⛔ needs a new account"
+        print(f"  {PROGRAM_TAG.get(opt.program, opt.program):<17} ← {mark}: "
               + (", ".join(transfers.TRANSFERS[k]["name"].split(" (")[0] for k in keys) or "no card route"))
+    if dropped:
+        print(f"  ({len(dropped)} option(s) hidden by --funded: "
+              + ", ".join(PROGRAM_TAG.get(x.program, x.program) for x in dropped) + ")")
 
     # live layer
     if not args.no_live:
@@ -215,6 +228,8 @@ def main(argv=None) -> int:
     r.add_argument("-c", "--cabin", type=_cab, default="J")
     r.add_argument("--via", nargs="*", default=[], help="connection airports, e.g. --via HKG")
     r.add_argument("--cash", type=float, help="cash fare you would otherwise pay")
+    r.add_argument("--funded", action="store_true",
+                   help="only show programs you can fund from the card currencies you actually hold")
     r.add_argument("--discount", type=float, default=0.0,
                    help="percent off for a program-wide award sale, e.g. 30")
     r.add_argument("--cash-currency", default="JPY",

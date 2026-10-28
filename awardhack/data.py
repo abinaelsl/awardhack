@@ -443,4 +443,60 @@ SWEET_SPOTS = [
         "catch": "Routing Japan→Jakarta via HKG blows past the band and drops you on the "
                  "multi-carrier chart (60,000+). Only good for single-sector-ish trips.",
     },
+    {
+        "id": "krf-zone-addon",
+        "title": "KrisFlyer zone pricing: the Singapore stop is almost free",
+        "route": "FUK/NRT → SIN → CGK on SQ metal",
+        "cabin": "J",
+        "miles": "57,000 total (FUK→SIN alone is 54,500)",
+        "program": "krisflyer_sq",
+        "why": "SQ prices the ZONE PAIR, not the segments: Japan zone 7 → Indonesia zone 2 is "
+               "57,000 J whether you fly one sector or two. Adding Singapore costs 2,500 miles — "
+               "a second destination for ~4% more.",
+        "catch": "Stopover (not just transit) rules differ: a Saver one-way generally cannot "
+                 "hold a stopover; price it as two awards (54,500 + 22,000) if you want to stay "
+                 "in Singapore. Transit-only still gets the 57,000 price.",
+    },
+    {
+        "id": "krf-star-cheaper",
+        "title": "Same balance, different chart: Star partners beat SQ metal",
+        "route": "Japan ⇄ Indonesia",
+        "cabin": "J",
+        "miles": "52,500 (Star partner) vs 57,000 (SQ metal)",
+        "program": "krisflyer_star",
+        "why": "KrisFlyer miles on ANA/Thai/EVA metal price off the Star Alliance chart "
+               "(North Asia ⇄ SE Asia 2 = 105,000 RT ÷ 2), which is 4,500 miles cheaper than "
+               "SQ's own zone chart for the identical trip.",
+        "catch": "Star partners pass fuel surcharges; on a Japan-origin ticket that can be "
+                 "¥15,000-30,000. Compare net, and remember a one-way WITH a stopover prices "
+                 "per sector.",
+    },
+    {
+        "id": "krf-escapes",
+        "title": "Spontaneous Escapes: 30% off SQ metal, monthly",
+        "route": "whatever SQ lists that month",
+        "cabin": "J",
+        "miles": "e.g. SIN→CGK J 22,000 → 15,400; Japan↔Indonesia 57,000 → 39,900",
+        "program": "krisflyer_sq",
+        "why": "SQ discounts selected Saver awards ~30% for travel in the following month. It is "
+               "the single biggest lever available to a KrisFlyer-only wallet — 39,900 for "
+               "Japan→Jakarta business beats the ANA chart that is otherwise out of reach.",
+        "catch": "Travel window is one month, blackout/route lists change monthly, and Japan "
+                 "routes are not always included. Book within the promo window; run "
+                 "`--discount 30` to price it.",
+    },
+    {
+        "id": "ga-kf",
+        "title": "Garuda Indonesia, booked with KrisFlyer (bilateral, not Star)",
+        "route": "SIN ⇄ CGK/SUB 24,000 · SIN ⇄ DPS 21,000 · CGK ⇄ DPS 21,000",
+        "cabin": "J",
+        "miles": "21,000–24,000 J one-way (economy 13,500)",
+        "program": "garudamiles_ga",
+        "why": "GA joined KrisFlyer for redemptions in Aug 2025, so SQ miles now book Garuda's "
+               "nonstops — including CGK↔DPS, where 21,000 undercuts SQ's own 23,000 "
+               "within-zone price.",
+        "catch": "Only the listed city pairs are on the chart (Singapore/Denpasar/Jakarta/"
+                 "Surabaya/Lombok/Labuan Bajo/Sam Ratulangi). Garuda's Japan flights are NOT "
+                 "bookable with KrisFlyer miles — for those you would need GarudaMiles.",
+    },
 ]

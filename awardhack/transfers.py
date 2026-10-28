@@ -33,6 +33,30 @@ TRANSFERS = {
         "notes": "The only realistic way to reach Turkish, Alaska, Avianca etc. from a "
                  "Japan-based wallet. Slow transfers (days).",
     },
+    "dbs_id": {
+        "name": "DBS Indonesia (digibank) reward points",
+        "verified": "user-confirmed in-app path: DBS ID points -> KrisFlyer miles",
+        "source": "https://www.dbs.id/digibank/id/en/kartu/kartu-digibank/digibank-mc-black",
+        "as_of": "2026-10-28",
+        "ratio": "varies by card tier — read the in-app conversion screen before transferring",
+        "reaches": ["krisflyer_sq", "krisflyer_star"],
+        "notes": "KrisFlyer-only. No ANA/JAL/Avios/Asia Miles/LifeMiles path from here, so every "
+                 "DBS point lands in the one program that prices Japan-Indonesia highest.",
+    },
+    "jenius": {
+        "name": "Jenius Credit Card (Bank BTPN) — Yay Points",
+        "verified": "jenius.com/pages/yaypoints: 40,000 Yay = 30,000 KrisFlyer (Club Grow/Nurture/Bloom); "
+                    "50,000 Yay = 30,000 KrisFlyer (Club Seed/Plant); 25,000 Yay = 20,000 GarudaMiles; "
+                    "one conversion per airline per month, effective 1 Aug 2026",
+        "source": "https://www.jenius.com/pages/yaypoints",
+        "as_of": "2026-08-01",
+        "ratio": "40,000 Yay : 30,000 KF (0.75/mile) | 25,000 Yay : 20,000 GarudaMiles (0.80/mile)",
+        "reaches": ["krisflyer_sq", "krisflyer_star", "garudamiles_ga"],
+        "notes": "The only one of his currencies with a SECOND airline partner: GarudaMiles redeems "
+                 "at a slightly better Yay ratio than KrisFlyer and can be spent on Garuda's "
+                 "nonstop HND/NRT-Jakarta flights. Earn is 1 Yay per Rp10,000 domestic (Club Grow+), "
+                 "i.e. ~1 mile per Rp13,300 of spend.",
+    },
     "id_bank_krisflyer": {
         "name": "Indonesian bank cards (Mandiri / BCA / BNI / CIMB / UOB / Danamon / HSBC ID)",
         "verified": "issuer pages — nearly all route points to KrisFlyer (some to GarudaMiles)",
@@ -69,5 +93,16 @@ TRANSFERS = {
 }
 
 
+# What he actually holds (updated 2026-10-28): Indonesian bank cards only — DBS Indonesia
+# digibank and a Jenius (BTPN) card. No ANA account, JAL account lost. So the funded set is
+# deliberately small.
+MY_CURRENCIES = ["dbs_id", "jenius"]
+
+
 def reachable(program_key: str) -> list[str]:
     return [k for k, v in TRANSFERS.items() if program_key in v["reaches"]]
+
+
+def mine(program_key: str) -> list[str]:
+    """Currencies he can actually move points from today (not 'could, if he opened an account')."""
+    return [k for k in MY_CURRENCIES if program_key in TRANSFERS[k]["reaches"]]
