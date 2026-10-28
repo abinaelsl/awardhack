@@ -217,6 +217,62 @@ def cmd_sweet(args) -> int:
     return 0
 
 
+def cmd_float(args) -> int:
+    """Credit-limit leverage math. Miles are the side-effect, not the point."""
+    limit = args.limit
+    cyc = max(1, args.cycle_days)
+    cycles = 365.0 / cyc
+    net = (args.margin - args.fx) / 100.0          # net margin per cycle
+    ann = (1 + net) ** cycles - 1
+    simple = net * cycles
+    fee_drag = (args.annual_fee / limit) if limit else 0.0
+    usdjpy = live.fx_usdjpy()
+    idr = live.fx_rate("IDR", "JPY")
+
+    print(f"\nCREDIT-FLOAT MODEL  limit {limit:,.0f} {args.currency}  "
+          f"cycle {cyc}d  margin {args.margin}%/cycle  fx drag {args.fx}%/cycle")
+    print(f"  cycles per year        {cycles:>8.1f}")
+    print(f"  net margin per cycle   {net*100:>8.2f}%")
+    print(f"  annualised (compounded){ann*100:>8.1f}%")
+    print(f"  annualised (simple)    {simple*100:>8.1f}%")
+    if fee_drag:
+        print(f"  annual fee drag        {fee_drag*100:>8.2f}% of limit "
+              f"({args.annual_fee:,.0f} {args.currency}/yr)")
+    print(f"  gross profit / year    {(1+net)**cycles*limit - limit:>14,.0f} {args.currency}")
+
+    if args.per_mile:
+        spend_yr = limit * cycles
+        miles = spend_yr / args.per_mile
+        gravy_native = miles * args.mile_value_jpy
+        # convert gravy into the limit currency to compare like for like
+        if args.currency.upper() == "IDR":
+            gravy_ccy = gravy_native / idr
+        else:
+            gravy_ccy = gravy_native
+        print(f"\n  MILES AS GRAVY")
+        print(f"    spend throughput     {spend_yr:>14,.0f} {args.currency}/yr")
+        print(f"    earn rate            {args.per_mile:,.0f} {args.currency}/mile")
+        print(f"    miles per year       {miles:>14,.0f}")
+        profit = (1 + net) ** cycles * limit - limit
+        print(f"    gravy value          {gravy_ccy:>14,.0f} {args.currency} "
+              f"(¥{gravy_native:,.0f})")
+        print(f"    gravy % of spend     {gravy_ccy/spend_yr*100:>7.2f}% per year")
+        print(f"    gravy % of limit     {gravy_ccy/limit*100:>7.2f}% per year")
+        print(f"    gravy vs margin      {gravy_ccy/profit*100:>7.0f}% of the arbitrage "
+              f"profit — at this turnover miles are NOT gravy, they are a margin line")
+
+    print("\n  BREAK-EVEN NOTES")
+    print(f"    a {args.annual_fee:,.0f} {args.currency} annual fee needs "
+          f"{args.annual_fee/limit*100:.2f}% of limit in margin just to cancel out")
+    print(f"    every 1.0% of extra FX drag costs {limit*0.01*cycles:,.0f} {args.currency}/yr "
+          f"at this turnover")
+    print("    the edge dies instantly if you ever carry a balance "
+          "(ID cards ~2%/month, JP cards ~15%/yr) — full payment, every cycle")
+    print("\n  not advice, and not a licence to kite: paying one card with another is a "
+          "closure event at every issuer in both countries.")
+    return 0
+
+
 def cmd_cards(args) -> int:
     idr = live.fx_rate("IDR", "JPY")
     print("\nCARD SHORTLIST  (per-mile cost at the realistic tier; lower is better)")
@@ -338,6 +394,18 @@ def main(argv=None) -> int:
 
     c = sub.add_parser("cards", help="card shortlist ranked by rupiah/yen per mile")
     c.set_defaults(func=cmd_cards)
+
+    fl = sub.add_parser("float", help="credit-limit leverage math (float, not miles)")
+    fl.add_argument("--limit", type=float, required=True, help="total credit limit")
+    fl.add_argument("--currency", default="IDR", choices=["IDR", "JPY", "USD"])
+    fl.add_argument("--margin", type=float, default=2.0, help="gross %% per cycle")
+    fl.add_argument("--fx", type=float, default=0.0, help="FX/other drag %% per cycle")
+    fl.add_argument("--cycle-days", type=int, default=30)
+    fl.add_argument("--annual-fee", type=float, default=0.0)
+    fl.add_argument("--per-mile", type=float, default=0.0,
+                    help="native currency spent per mile (e.g. 16667 IDR)")
+    fl.add_argument("--mile-value-jpy", type=float, default=1.8)
+    fl.set_defaults(func=cmd_float)
 
     w = sub.add_parser("watch", help="machine-readable digest of watchlist.json (cron)")
     w.set_defaults(func=cmd_watch)

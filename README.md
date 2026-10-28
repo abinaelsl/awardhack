@@ -134,6 +134,15 @@ It is a cross-check, not the source of truth: it can only report programs with s
 - Taxes/fuel surcharges are **not** in the static charts (they're unknown until you search).
   The value math flags this with `*`.
 
+## Not miles: the credit-float calculator
+
+`awardhack float --limit 50000000 --margin 2.0 --cycle-days 30 --annual-fee 800000 --per-mile 6667`
+
+Cycles/year, compounded vs simple annualised return, annual-fee drag, FX drag cost, and the miles
+earned as a share of that profit. At realistic turnover the card's earn rate is worth 0.5–1.4x the
+flip margin itself, which makes card choice a margin decision — see
+`Trading/Credit Card Float Model.md` in the vault.
+
 ## Cron
 
 `awardhack watch` prints a JSON digest of `watchlist.json`. Per route: `cheapest_chart`,
