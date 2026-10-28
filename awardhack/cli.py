@@ -190,6 +190,31 @@ def cmd_sweet(args) -> int:
     return 0
 
 
+def cmd_cards(args) -> int:
+    idr = live.fx_rate("IDR", "JPY")
+    print("\nCARD SHORTLIST  (per-mile cost at the realistic tier; lower is better)")
+    for market in ("Japan", "Indonesia"):
+        print(f"\n  ── {market}-issued " + "─" * 60)
+        for card in data.CARDS:
+            if card["market"] != market:
+                continue
+            pm = card["per_mile"]
+            if "JPY" in pm:
+                cost = f"¥{pm['JPY']:,}/mile"
+            else:
+                cost = f"Rp{pm['IDR']:,}/mile  (¥{pm['IDR'] * idr:,.0f})"
+            print(f"\n  {card['name']}")
+            print(f"    fee   {card['annual_fee']:<28} {cost}")
+            print(f"    reaches {', '.join(PROGRAM_TAG.get(x, x) for x in card['reach'])}")
+            for line in _wrap(card["why"], 88):
+                print(f"    + {line}")
+            for line in _wrap(card["catch"], 88):
+                print(f"    ! {line}")
+    print("\n  rule: earn rate decides the card, transfer partners decide the program. "
+          "A card that cannot reach ANA is worth nothing for a 30,000-mile ANA seat.")
+    return 0
+
+
 def cmd_transfers(args) -> int:
     for k, v in transfers.TRANSFERS.items():
         print(f"\n{v['name']}")
@@ -257,6 +282,9 @@ def main(argv=None) -> int:
 
     t = sub.add_parser("transfers", help="which card currency reaches which program")
     t.set_defaults(func=cmd_transfers)
+
+    c = sub.add_parser("cards", help="card shortlist ranked by rupiah/yen per mile")
+    c.set_defaults(func=cmd_cards)
 
     w = sub.add_parser("watch", help="machine-readable digest of watchlist.json (cron)")
     w.set_defaults(func=cmd_watch)

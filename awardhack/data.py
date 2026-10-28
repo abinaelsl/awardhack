@@ -500,3 +500,130 @@ SWEET_SPOTS = [
                  "bookable with KrisFlyer miles — for those you would need GarudaMiles.",
     },
 ]
+
+# ---------------------------------------------------------------------------
+# Card shortlist for Abinael's two spend jurisdictions, verified 2026-10-28.
+# "per_mile" = native currency spent per 1 airline mile, at the card's realistic
+# earning tier (not the headline teaser rate). Lower is better.
+# ---------------------------------------------------------------------------
+CARDS = [
+    # ---- Japan-issued: where he actually spends (JPY) ----
+    {
+        "id": "ana_student_jcb",
+        "name": "ANAカード (学生用) JCB",
+        "market": "Japan",
+        "annual_fee": "free while enrolled",
+        "per_mile": {"JPY": 100},
+        "reach": ["ana_partner"],
+        "why": "200円 = 2 ANA miles (1.0%), plus 1,000 bonus miles every year and "
+               "1 mile per 100-200円 at ANA Card Mile Plus shops. The ANA JCB is the "
+               "only version at the double rate — VISA/Mastercard are 0.5%.",
+        "catch": "Needs Japanese residence + student status (confirm 研究生 counts). "
+                 "Locks you into ANA miles, which is exactly what unlocks the 30,000 "
+                 "Japan→Indonesia business price and ANA's nonstop NH855 HND→CGK.",
+        "source": "https://www.ana.co.jp/ja/jp/amc/anacard/st_card",
+    },
+    {
+        "id": "jal_navi",
+        "name": "JALカード navi (student)",
+        "market": "Japan",
+        "annual_fee": "free while enrolled",
+        "per_mile": {"JPY": 100},
+        "reach": ["jal_own", "jal_oneworld"],
+        "why": "Shopping miles double during enrollment (≈100円 = 1 mile), miles DO NOT "
+               "EXPIRE while you are a student, and navi holders get JAL's discounted "
+               "award rates — which matters because JAL's own chart already prices "
+               "Japan→Jakarta J at 40,000.",
+        "catch": "Rebuilds the JAL account he lost. JAL miles are still the least "
+                 "flexible of his options; treat it as the backup to ANA.",
+        "source": "https://www.jal.co.jp/jp/ja/jalcard/card/navi.html",
+    },
+    {
+        "id": "amex_jp_mr",
+        "name": "Amex Membership Rewards (Japan) — Green/Gold",
+        "market": "Japan",
+        "annual_fee": "¥13,200 (Green) / ¥31,900 (Gold)",
+        "per_mile": {"JPY": 100},
+        "reach": ["ana_partner", "krisflyer_sq", "krisflyer_star", "asiamiles", "avios",
+                  "jal_own", "jal_oneworld"],
+        "why": "13 airline partners at 1,000 points = 1,000 miles. The only card in his "
+               "reach that can pivot between ANA, KrisFlyer, Asia Miles and Avios after "
+               "the fact — flexibility is worth paying an annual fee for.",
+        "catch": "JAL transfer ratio is poor (skip that path). ANA transfers cost a "
+                 "¥5,500/yr course fee. Transfers take days, never do it before you hold "
+                 "a seat.",
+        "source": "https://www.americanexpress.com/ja-jp/point/mile-point/airline",
+    },
+    {
+        "id": "bonvoy_amex_jp",
+        "name": "Marriott Bonvoy Amex (Japan)",
+        "market": "Japan",
+        "annual_fee": "¥16,500 (varies)",
+        "per_mile": {"JPY": 240},
+        "reach": ["ana_partner", "jal_own", "krisflyer_sq", "turkish", "asiamiles"],
+        "why": "Bonvoy 3:1 (60,000 → 25,000 miles) reaches 40+ airlines including ANA and "
+               "JAL — the widest net available from Japan.",
+        "catch": "¥240 per mile is 2.4x worse than the ANA card. Use Bonvoy for hotel "
+                 "stays and only convert when a bonus or a specific seat justifies it.",
+        "source": "https://www.marriott.com/loyalty/redeem/travel/points-to-miles.mi",
+    },
+    # ---- Indonesia-issued: where the rupiah spends ----
+    {
+        "id": "jenius_cc",
+        "name": "Kartu Kredit Jenius (BTPN)",
+        "market": "Indonesia",
+        "annual_fee": "low",
+        "per_mile": {"IDR": 6667},
+        "reach": ["krisflyer_sq", "krisflyer_star", "garudamiles"],
+        "why": "Rp6,667 per KrisFlyer mile on Double Yay categories, and up to 60,000 "
+               "KrisFlyer miles/month at Bloom tier. He ALREADY HOLDS THIS — it is 2.5x "
+               "better per mile than the Danamon JCB Precious.",
+        "catch": "Only 1 conversion per airline per month (40,000 Yay → 30,000 KF at "
+                 "Grow/Nurture/Bloom; 50,000 Yay at Seed/Plant).",
+        "source": "https://pinterpoin.com/10-kartu-kredit-terbaik-krisflyer-miles",
+    },
+    {
+        "id": "danamon_jcb_precious",
+        "name": "Danamon JCB Precious",
+        "market": "Indonesia",
+        "annual_fee": "Rp800,000 (waivable)",
+        "per_mile": {"IDR": 16667},
+        "reach": ["krisflyer_sq", "asiamiles", "garudamiles", "jal_own"],
+        "why": "Six airline partners from a mid-tier card (GarudaMiles 15 D-Point = 1 mile, "
+               "KrisFlyer/Asia Miles 20 = 1, JAL 32 = 1) and genuinely useful Japan perks: "
+               "unlimited domestic ID lounges, 6x/yr JCB lounges in Japan & Hawaii, "
+               "8x/yr LoungeKey, and JCB acceptance everywhere in Japan.",
+        "catch": "Rp16,667 per KrisFlyer mile even at the best tier — the WORST miles rate "
+                 "of any card on this list. The ≥Rp50,000,000 placement only buys the 3.0 "
+                 "vs 2.5 D-Point tier (+20% points) plus the AF waiver. Buy this card for "
+                 "lounges and JCB coverage, never for the miles rate.",
+        "source": "https://pinterpoin.com/review-kartu-kredit-danamon-jcb-precious",
+    },
+    {
+        "id": "mandiri_prioritas",
+        "name": "Mandiri Prioritas World MC",
+        "market": "Indonesia",
+        "annual_fee": "free at Prioritas",
+        "per_mile": {"IDR": 6667},
+        "reach": ["krisflyer_sq", "krisflyer_star"],
+        "why": "Rp6,667 per KrisFlyer mile on IDR and Rp5,000 on foreign currency — with a "
+               "Rp1,000,000,000 AUM requirement it is the cheapest realistic step up from "
+               "Jenius if he ever parks serious money in Indonesia.",
+        "catch": "Conversion capped near 25,000 miles/month, and Rp1 M AUM is a big ask. "
+                 "Foreign-currency spend is where it shines — i.e. his Japan spending.",
+        "source": "https://pinterpoin.com/10-kartu-kredit-terbaik-krisflyer-miles",
+    },
+    {
+        "id": "bca_sq_kf_vi",
+        "name": "BCA Singapore Airlines KrisFlyer Visa Infinite",
+        "market": "Indonesia",
+        "annual_fee": "premium",
+        "per_mile": {"IDR": 7015},
+        "reach": ["krisflyer_sq", "krisflyer_star"],
+        "why": "Rp7,015/mile at Rp20jt monthly billing (Rp7,542 at Rp50jt), plus a 12,500 "
+               "KrisFlyer welcome bonus and 3x miles during the twice-yearly BCA-SIA fair.",
+        "catch": "Earning collapses to Rp10,800/mile below Rp20jt/month. Only worth it if "
+                 "he pushes real volume through it.",
+        "source": "https://pinterpoin.com/10-kartu-kredit-terbaik-krisflyer-miles",
+    },
+]
