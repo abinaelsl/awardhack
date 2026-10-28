@@ -1,0 +1,13 @@
+{
+  "_comment": "Routes worth re-checking on a schedule. Edit freely; awardhack watch reads this.",
+  "routes": [
+    {"from": "FUK", "to": "CGK", "cabin": "J", "note": "home route, one-way business"},
+    {"from": "NRT", "to": "CGK", "cabin": "J", "note": "JAL/ANA nonstop, business"},
+    {"from": "FUK", "to": "CGK", "cabin": "Y", "note": "home route, economy"},
+    {"from": "BKK", "to": "CGK", "cabin": "J", "note": "the 17,500-mile rumour route"},
+    {"from": "SIN", "to": "CGK", "cabin": "J", "note": "KrisFlyer 22,000 saver"},
+    {"from": "FUK", "to": "SIN", "cabin": "J", "note": "KrisFlyer Zone7-Zone1 = 54,500"},
+    {"from": "BKK", "to": "DPS", "cabin": "J", "note": "regional beach hop"},
+    {"from": "HND", "to": "LHR", "cabin": "J", "note": "long-haul aspirational"}
+  ]
+}
