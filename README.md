@@ -126,6 +126,16 @@ It is a cross-check, not the source of truth: it can only report programs with s
 - Taxes/fuel surcharges are **not** in the static charts (they're unknown until you search).
   The value math flags this with `*`.
 
+## Cron
+
+`awardhack watch` prints a JSON digest of `watchlist.json` (cheapest chart price per route plus
+the best awards actually observed in the last 30 days). Hermes runs it weekly as job
+`awardhack-watch`, Mon 09:00 JST, delivering to DM.
+
+The scheduler's script hook takes a **file path**, not a shell command, so the job points at
+`~/AppData/Local/hermes/scripts/awardhack_watch.py`, which shells out to
+`python3 -m awardhack watch` in the repo and prints its JSON.
+
 ## Layout
 
 ```
