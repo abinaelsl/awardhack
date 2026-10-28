@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import os
 import sys
@@ -70,6 +71,10 @@ def cmd_route(args) -> int:
     dist = engine.route_distance(o, d, via)
     cabin = args.cabin
 
+    _real_stdout = sys.stdout
+    if args.json:
+        sys.stdout = io.StringIO()          # --json must emit JSON only, for piping
+
     print(f"\n{ap.name(o)} ({o}) → {ap.name(d)} ({d})   {engine.CABIN_NAMES[cabin]}"
           + (f"   via {'/'.join(via)}" if via else ""))
     print(f"direct {dist['direct_mi']:,} mi ({dist['direct_km']:,} km) | "
@@ -133,12 +138,14 @@ def cmd_route(args) -> int:
             print("  rule of thumb: ¥1.3/mi = meh, ¥2/mi = good, ¥3+/mi = book it now")
 
     if args.json:
-        print("\n" + json.dumps({
-            "route": f"{o}-{d}", "cabin": cabin, "distance": dist, "usdjpy": usdjpy,
+        sys.stdout = _real_stdout
+        print(json.dumps({
+            "route": f"{o}-{d}", "cabin": cabin, "distance_mi": dist, "usdjpy": usdjpy,
             "cash_jpy": cash_jpy,
             "charts": [{"program": x.program, "miles": x.miles, "basis": x.basis,
                         "confidence": x.confidence, "source": x.source,
                         "notes": x.notes} for x in opts],
+            "live": blob or None,
         }, indent=2, ensure_ascii=False))
     return 0
 
