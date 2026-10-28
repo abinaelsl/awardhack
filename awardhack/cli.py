@@ -41,11 +41,15 @@ def _cab(s: str) -> str:
     return c
 
 
-def _fmt_option_row(o: engine.Option, cash_jpy: float | None, usdjpy: float) -> str:
+def _fmt_option_row(o: engine.Option, cash_jpy: float | None, usdjpy: float,
+                    discount: float = 0.0) -> str:
     val = ""
+    miles = int(round(o.miles * (1 - discount / 100.0))) if discount else o.miles
     if cash_jpy:
-        ypm = cash_jpy / o.miles   # gross of taxes: chart rows carry unknown YQ
+        ypm = cash_jpy / miles   # gross of taxes: chart rows carry unknown YQ
         val = f"{ypm:4.2f} ¥/mi* {verdict(ypm)}"
+        if discount:
+            val += f"  (−{discount:.0f}% → {miles:,})"
     tag = "P" if o.confidence == "primary" else "s"
     return (f"  {o.miles:>7,}  {PROGRAM_TAG.get(o.program, o.program):<17} [{tag}] "
             f"{o.basis:<44} {val}")
@@ -90,7 +94,7 @@ def cmd_route(args) -> int:
     print(f"  {'miles':>7}  {'program':<17}     {'basis':<44} value")
     print("  " + "-" * 88)
     for opt in opts:
-        print(_fmt_option_row(opt, cash_jpy, usdjpy))
+        print(_fmt_option_row(opt, cash_jpy, usdjpy, args.discount))
         for n in opt.notes[:1]:
             if args.verbose:
                 print(f"           ↳ {n}")
@@ -211,6 +215,8 @@ def main(argv=None) -> int:
     r.add_argument("-c", "--cabin", type=_cab, default="J")
     r.add_argument("--via", nargs="*", default=[], help="connection airports, e.g. --via HKG")
     r.add_argument("--cash", type=float, help="cash fare you would otherwise pay")
+    r.add_argument("--discount", type=float, default=0.0,
+                   help="percent off for a program-wide award sale, e.g. 30")
     r.add_argument("--cash-currency", default="JPY",
                    choices=["JPY", "USD", "IDR", "THB", "SGD", "EUR", "KRW"])
     r.add_argument("--usdjpy", type=float, default=None)
