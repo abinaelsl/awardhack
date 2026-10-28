@@ -217,6 +217,53 @@ def cmd_sweet(args) -> int:
     return 0
 
 
+def cmd_capacity(args) -> int:
+    """Where the next rupiah of credit limit should go. Capacity, not rate, is the constraint."""
+    path = args.file or os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "limits.json")
+    blob = json.load(open(path, encoding="utf-8"))
+    cycles = float(blob.get("cycles_per_year", 12.0))
+    mile_idr = float(blob.get("mile_value_idr", 200))
+    cards = {x["id"]: x for x in data.CARDS}
+    rows = []
+    for entry in blob["cards"]:
+        meta = cards.get(entry["card"])
+        if not meta:
+            continue
+        per_mile = meta["per_mile"].get("IDR")
+        if not per_mile:
+            continue
+        limit = entry.get("limit", 0)
+        spend = limit * cycles
+        miles = spend / per_mile
+        value = miles * mile_idr
+        net = value - entry.get("annual_fee", 0)
+        rows.append({"name": meta["name"], "limit": limit, "per_mile": per_mile,
+                     "spend": spend, "miles": miles, "value": value,
+                     "fee": entry.get("annual_fee", 0), "net": net,
+                     "per_limit_jt": (1_000_000 * cycles / per_mile) * mile_idr})
+    rows.sort(key=lambda r: -r["limit"])
+    print(f"\nCAPACITY VIEW  ({cycles:.1f} cycles/yr, mile valued at Rp{mile_idr:,.0f})")
+    print(f"  {'card':<34}{'limit':>13}{'Rp/mile':>10}{'miles/yr':>11}{'value/yr':>13}{'net of AF':>13}")
+    print("  " + "-" * 93)
+    tot_miles = tot_net = tot_limit = 0
+    for r in rows:
+        print(f"  {r['name'][:33]:<34}{r['limit']:>13,.0f}{r['per_mile']:>10,.0f}"
+              f"{r['miles']:>11,.0f}{r['value']:>13,.0f}{r['net']:>13,.0f}")
+        tot_miles += r["miles"]; tot_net += r["net"]; tot_limit += r["limit"]
+    print("  " + "-" * 93)
+    print(f"  {'TOTAL':<34}{tot_limit:>13,.0f}{'':>10}{tot_miles:>11,.0f}{'':>13}{tot_net:>13,.0f}")
+
+    print("\n  MARGINAL: what one more Rp1,000,000 of limit is worth per year")
+    for r in sorted(rows, key=lambda r: -r["per_limit_jt"]):
+        print(f"    {r['name'][:33]:<34} Rp{r['per_limit_jt']:>9,.0f}/yr  "
+              f"(earn rate Rp{r['per_mile']:,.0f}/mile)")
+    print("\n  Reading: a limit INCREASE on a good-rate card is free money — no new annual fee,")
+    print("  no new application. Only add a new card when the increases stall; then rank the")
+    print("  candidates by marginal miles, and check the annual fee against the limit it unlocks.")
+    return 0
+
+
 def cmd_float(args) -> int:
     """Credit-limit leverage math. Miles are the side-effect, not the point."""
     limit = args.limit
@@ -394,6 +441,10 @@ def main(argv=None) -> int:
 
     c = sub.add_parser("cards", help="card shortlist ranked by rupiah/yen per mile")
     c.set_defaults(func=cmd_cards)
+
+    cap = sub.add_parser("capacity", help="where the next rupiah of credit limit should go")
+    cap.add_argument("--file", help="path to limits.json (default: repo root)")
+    cap.set_defaults(func=cmd_capacity)
 
     fl = sub.add_parser("float", help="credit-limit leverage math (float, not miles)")
     fl.add_argument("--limit", type=float, required=True, help="total credit limit")

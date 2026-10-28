@@ -572,6 +572,20 @@ CARDS = [
     },
     # ---- Indonesia-issued: where the rupiah spends ----
     {
+        "id": "dbs_vantage_id",
+        "name": "DBS Indonesia Vantage (or digibank MC)",
+        "market": "Indonesia",
+        "annual_fee": "Rp4-5,000,000 (NOT waivable on Vantage)",
+        "per_mile": {"IDR": 7500},
+        "reach": ["krisflyer_sq", "krisflyer_star"],
+        "why": "Rp7,500 per KrisFlyer mile (10,000 Vantage Points = 10,000 miles), the best "
+               "per-mile rate of any card he actually holds. Points never expire.",
+        "catch": "Earning is capped at 1x credit limit per month, and the Vantage annual fee "
+                 "(Rp4-5jt, non-waivable) is larger than a year of miles at low turnover — the "
+                 "fee, not the rate, decides whether this card nets positive.",
+        "source": "https://pinterpoin.com/review-kartu-kredit-dbs-vantage-visa-infinite",
+    },
+    {
         "id": "jenius_cc",
         "name": "Kartu Kredit Jenius (BTPN)",
         "market": "Indonesia",

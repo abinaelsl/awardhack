@@ -1,0 +1,25 @@
+{
+  "_comment": "Your live limits. Edit as they change. awardhack capacity reads this.",
+  "cycles_per_year": 12.2,
+  "mile_value_idr": 200,
+  "cards": [
+    {
+      "card": "jenius_cc",
+      "limit": 6000000,
+      "annual_fee": 0,
+      "note": "Rp6jt limit — rate is great, capacity is the bottleneck"
+    },
+    {
+      "card": "dbs_vantage_id",
+      "limit": 30000000,
+      "annual_fee": 4500000,
+      "note": "Rp30jt limit; confirm which DBS product and whether AF is being waived"
+    },
+    {
+      "card": "danamon_jcb_precious",
+      "limit": 0,
+      "annual_fee": 0,
+      "note": "prospective: set limit once approved (AF waived with Rp50jt placed)"
+    }
+  ]
+}
